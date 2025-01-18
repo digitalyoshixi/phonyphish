@@ -21,7 +21,7 @@ def index():
         """.strip()
         return Response(xml, mimetype='text/xml')
     else:
-        return "hello world"
+        return "transcription testing"
 
 @sock.route('/realtime')
 def transcription_websocket(ws):
