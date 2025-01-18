@@ -5,11 +5,32 @@ from flask_cors import CORS, cross_origin
 #from flask_sockets import Sockets
 import json 
 from datetime import datetime
+import base64
+import audioop
+import speech_recognition as sr
+import audioop
+import json
+from vosk import Model, KaldiRecognizer
+
+# Load Vosk model
+#model = Model("./vosk-model")
+#rec = KaldiRecognizer(model, 16000) # apparently android devices have 16000Hz freq rate
+
+#def decodemulaw(mulaw_data):
+#    # Assume `mulaw_data` is your μ-law encoded audio data
+#    raw_audio = audioop.ulaw2lin(mulaw_data, 2)  # Convert μ-law to linear PCM
+#    if rec.AcceptWaveform(raw_audio):
+#        result = json.loads(rec.Result())
+#        print(result['text'])
+#    else:
+#        partial_result = json.loads(rec.PartialResult())
+#        print(partial_result['partial'])
 
 app = Flask(__name__) # designates this script as the root apth
 sock= Sock(app)
 CORS(app, supports_credentials=True, origins="*")
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -28,8 +49,11 @@ def index():
 
 @sock.route('/transcription_callback')
 def transcription_callback(ws):
+    print(ws)
+    print("hello?")
+    totalbytes = bytes()
     while True:
-        data = json.loads(ws.recieve())
+        data = json.loads(ws.receive())
         type = data['event']
         if type == "connected":
             print("connected")  
@@ -37,11 +61,16 @@ def transcription_callback(ws):
             print("start")  
         if type == "media":
             print("media")  
-            payload = data['media']['payload']
-            print(payload)
+            payloadb64 = data['media']['payload']
+            print(base64.b64decode(payloadb64))
+            totalbytes += base64.b64decode(payloadb64)
+            # decode the mulaw payload
+            
         if type == "stop":
             print("stop")  
-
+            f = open('temp', 'wb')
+            f.write(totalbytes)
+            f.close()
 
 if __name__ == "__main__": # if running this file directly
     app.run(host='0.0.0.0', port=8000, debug=True) # run the app
