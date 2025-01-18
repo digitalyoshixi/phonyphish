@@ -32,6 +32,7 @@ def index():
 @sockets.route('/realtime')
 def echo_socket(ws):
     """Handle WebSocket connections"""
+    print("can it be done? if not then try TLS")
     try:
         while not ws.closed:
             # Get message from WebSocket
