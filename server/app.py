@@ -15,7 +15,7 @@ def index():
     if request.method == "POST":
         xml = f"""
 <?xml version="1.0" encoding="UTF-8"?>
-<Response><Say voice="woman">Call is connected go and speak</Say></Response>
+<Response><Say voice="woman">Helo the call is connected go speak now</Say><Connect></Connect></Response>
         """.strip()
         print(xml)
         return Response(xml, mimetype='text/xml')
