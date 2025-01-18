@@ -13,6 +13,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def index():
     if request.method == "POST":
         xml = f"""
+        <?xml version="1.0" encoding="UTF-8"?>
         <Reponse>
             <Say voice="woman">
                 You have connected to flask
