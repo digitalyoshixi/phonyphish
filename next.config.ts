@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 const withPWA = require('next-pwa');
 
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,      // Enable React strict mode for improved error handling
   swcMinify: true,            // Enable SWC minification for improved performance
