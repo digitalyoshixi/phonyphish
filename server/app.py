@@ -1,6 +1,6 @@
 from flask import Flask, request, Response
 from flask_sock import Sock 
-from twilio.twiml.voice_response import VoiceResponse
+from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
 from flask_cors import CORS, cross_origin
 import json 
 
@@ -13,17 +13,23 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
-        xml = f"""
-<?xml version="1.0" encoding="UTF-8"?>
-<Response><Say voice="woman">Helo the call is connected go speak now</Say><Connect><Stream url='wss://{request.host}/realtime'/></Connect></Response>
-        """.strip()
-        print(xml)
-        return Response(xml, mimetype='text/xml')
+        response = VoiceResponse()
+
+        # Add initial greeting
+        response.say("Hello, the call is connected. You may speak now.", voice="woman")
+
+        # Connect the call to websocket
+        connect = Connect()
+        connect.stream(url=f'wss://{request.host}/realtime')
+        response.append(connect)
+
+        return str(response)
     else:
-        return "transcription testing"
+        return "hi this is transcription testing, dont view this with a GET request"
 
 @sock.route('/realtime')
 def transcription_websocket(ws):
+    print("am i here and is this good?")
     while True:
         data = json.loads(ws.recieve())
         if data['event'] == "connected":
