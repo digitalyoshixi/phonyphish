@@ -1,41 +1,33 @@
-from flask import Flask, request, Response
-from flask_sock import Sock 
-from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
-from flask_cors import CORS, cross_origin
-#from flask_sockets import Sockets
-import json 
-from datetime import datetime
-import speech_recognition as sr
-import audioop
+import time
+import os
 import json
-from vosk import Model, KaldiRecognizer
+import base64
+import asyncio
+import websockets
+from fastapi import FastAPI, WebSocket, Request
+from fastapi.responses import HTMLResponse
+from fastapi.websockets import WebSocketDisconnect
+from twilio.rest import Client
+from twilio.twiml.voice_response import VoiceResponse, Connect
+from dotenv import load_dotenv
 
-app = Flask(__name__) # designates this script as the root apth
-sock= Sock(app)
-CORS(app, supports_credentials=True, origins="*")
-app.config['CORS_HEADERS'] = 'Content-Type'
+# loading env environment
+load_dotenv()
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == "POST":
-        response = VoiceResponse()
-        # Add initial greeting
-        response.say("Helo, the call is connected you can speak now.", voice="woman")
-        # Start recording with transcription enabled
-        response.record(transcribe=True, transcribe_callback="/transcription")
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 
-        response.hangup()
-        return str(response)
-    else:
-        return "hi this is transcription testing, dont view this with a GET request"
+app = FastAPI()
 
-@app.route("/transcription", methods=["POST"])
-def transcription():
-    transcription_text = request.form.get("TranscriptionText")
-    print(f"Transcription: {transcription_text}")
-    
-    # Optional: Send the transcription via SMS or store it in a database
-    return "Transcription received"
+@app.post("/make_call")
+async def make_call(request : Request):
+    data = await request.json()
+    destphone = data.get("to")
 
-if __name__ == "__main__": # if running this file directly
-    app.run(host='0.0.0.0', port=8000, debug=True) # run the app
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    call = client.calls.create(url="", to="a", from_=+18795039086)
+    print(call.sid)
+
+@app.get("/")
+async def index():
+    return {"message": "Twilio Media Stream Server is running!"}
