@@ -19,6 +19,7 @@ def index():
             </Say>
         </Reponse>
         """.strip()
+        print(xml)
         return Response(xml, mimetype='text/xml')
     else:
         return "transcription testing"
