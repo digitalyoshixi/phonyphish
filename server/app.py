@@ -2,6 +2,7 @@ from flask import Flask, request, Response
 from flask_sock import Sock 
 from twilio.twiml.voice_response import VoiceResponse
 from flask_cors import CORS, cross_origin
+import json 
 
 app = Flask(__name__) # designates this script as the root apth
 sock = Sock(app)
@@ -14,7 +15,7 @@ def index():
     if request.method == "POST":
         xml = f"""
 <?xml version="1.0" encoding="UTF-8"?>
-<Response><Say voice="woman">message you have enabled flask ok</Say><Pause length="1"/><Say voice="woman">Let us make flasks</Say></Response>
+<Response><Say voice="woman">Call is connected go and speak</Say><Connect><Stream url='wss://{request.host}/realtime' /></Connect></Response>
         """.strip()
         print(xml)
         return Response(xml, mimetype='text/xml')
@@ -23,7 +24,23 @@ def index():
 
 @sock.route('/realtime')
 def transcription_websocket(ws):
-    pass
+    while True:
+        data = json.loads(ws.recieve())
+        match data['event']:
+            case "connected":
+                print("twilio is ocnnected")
+                break
+            case "start":
+                print("data stream start")
+                break
+            case "media":
+                print("media block")
+                payload = data['media']['payload']
+                print(payload)
+                break
+            case "stop":
+                print("data stream stop")
+                break
 
 
 if __name__ == "__main__": # if running this file directly
