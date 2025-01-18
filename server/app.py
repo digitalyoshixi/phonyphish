@@ -17,17 +17,11 @@ def index():
     if request.method == "POST":
         response = VoiceResponse()
         # Add initial greeting
-        response.say("Hello, the call is connected. You may speak now.", voice="woman")
+        response.say("Helo, the call is connected go speak now.", voice="woman")
         # Start recording with transcription enabled
-        response.record(
-            timeout=5,  # Stop recording after 20 seconds of silence
-            maxLength=300,  # Maximum recording length of 5 minutes
-            playBeep=True,
-            transcribe=True,  # Enable transcription
-            transcribeCallback='/transcription_callback'  # Webhook for transcription results
-        )
-        response.hangup()
-
+        connect = Connect()
+        connect.stream(url='wss://somethinghere/transcription_callback')
+        response.append(connect)
         return str(response)
     else:
         return "hi this is transcription testing, dont view this with a GET request"
@@ -36,19 +30,7 @@ def index():
 def handle_transcription():
     """Handle the transcription callback from Twilio."""
     # Get the transcription data
-    transcription_status = request.values.get('TranscriptionStatus')
-    transcription_text = request.values.get('TranscriptionText')
-    recording_url = request.values.get('RecordingUrl')
-    
-    if transcription_status == 'completed':
-        # Store or process the transcription
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        
-        # Example: Save to a file
-        with open(f'transcription_{timestamp}.txt', 'w') as f:
-            f.write(f"Recording URL: {recording_url}\n")
-            f.write(f"Transcription: {transcription_text}\n")
-    
+    print("hi guys")
     return 'OK'
 
 
