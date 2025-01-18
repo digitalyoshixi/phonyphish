@@ -26,21 +26,16 @@ def index():
 def transcription_websocket(ws):
     while True:
         data = json.loads(ws.recieve())
-        match data['event']:
-            case "connected":
-                print("twilio is ocnnected")
-                break
-            case "start":
-                print("data stream start")
-                break
-            case "media":
-                print("media block")
-                payload = data['media']['payload']
-                print(payload)
-                break
-            case "stop":
-                print("data stream stop")
-                break
+        if data['event'] == "connected":
+            print("twilio is ocnnected")
+        elif data['event'] == "start":
+            print("data stream start")
+        elif data['event'] == "media":
+            print("media block")
+            payload = data['media']['payload']
+            print(payload)
+        elif data['event'] == "stop":
+            print("data stream stop")
 
 
 if __name__ == "__main__": # if running this file directly
