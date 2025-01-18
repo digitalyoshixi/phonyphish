@@ -20,7 +20,7 @@ def index():
         response.say("Helo, the call is connected go speak now.", voice="woman")
         # Start recording with transcription enabled
         connect = Connect()
-        connect.stream(url='wss://somethinghere/transcription_callback')
+        connect.stream(url='wss://ec2-54-234-22-87.compute-1.amazonaws.com:8000/transcription_callback')
         response.append(connect)
         return str(response)
     else:
