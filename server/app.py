@@ -46,6 +46,10 @@ def dbupdate():
         ) 
     return "all good man"
 
+@app.route("/dbview", methods=["POST"])
+def dbview():
+    return dataretrieval.read_cursor()
+
 @app.route('/invokeAI', methods=['POST'])
 def invokeAI():
     if request.method == 'POST':

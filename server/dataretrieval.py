@@ -17,7 +17,7 @@ cursor = connection.cursor()
 def insert_cursor(phone_number, is_scam, transcription):
     try:
         cursor.execute(
-            f"INSERT INTO phone_scam_list (is_scam, phone_number, transcription) VALUES ({is_scam},{phone_number}, {transcription})",
+            f"INSERT INTO phone_scam_list (is_scam, phone_number, transcription) VALUES ({is_scam},{phone_number}, '{transcription}')",
         )
         connection.commit()
         logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")
