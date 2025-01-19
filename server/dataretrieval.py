@@ -24,6 +24,16 @@ def update_cursor(phone_number, is_scam):
     except Exception as e:
         logging.error(f"Error updating phone number {phone_number}: {e}")
 
+def update_cursor(phone_number, is_scam):
+    try:
+        cursor.execute(
+            f"UPDATE phone_scam_list SET is_scam = {is_scam}, phone_number = {phone_number}",
+        )
+        connection.commit()
+        logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")
+    except Exception as e:
+        logging.error(f"Error updating phone number {phone_number}: {e}")
+
 def read_cursor():
     try:
         cursor.execute("SELECT * FROM phone_scam_list")
