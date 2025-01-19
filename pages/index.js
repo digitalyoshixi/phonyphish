@@ -8,8 +8,26 @@ export default function Home() {
   
     const filteredCalls = calls.filter((call) => call.number.includes(search));
   
-    const handleReport = (number) => {
-      alert(`The call with number ${number} has been successfully reported.`);
+    const handleReport = async (number) => {
+
+      try {
+        const response = await fetch('ec2-184-73-58-196.compute-1.amazonaws.com:8000/dbupdate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ number: true }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Something went wrong!');
+        }
+        alert(`The call with number ${number} has been successfully reported.`);
+      }
+      catch (error) {
+        alert('Failed to report the call. Please try again later.');
+      }
+
     };
   
     return (
