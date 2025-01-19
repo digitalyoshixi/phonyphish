@@ -1,65 +1,60 @@
-import time
-import uvicorn
-import os
-import json
+from flask import Flask, request, Response
+from flask_sock import Sock 
+from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
+from flask_cors import CORS, cross_origin
+#from flask_sockets import Sockets
+import json 
+from datetime import datetime
 import base64
-import asyncio
-import websockets
-from fastapi import FastAPI, WebSocket, Request
-from fastapi.responses import HTMLResponse
-from fastapi.websockets import WebSocketDisconnect
-from twilio.rest import Client
-from twilio.twiml.voice_response import VoiceResponse, Connect
-from dotenv import load_dotenv
+import audioop
+import speech_recognition as sr
+import audioop
+import json
+from vosk import Model, KaldiRecognizer
 
-# loading env environment
-load_dotenv()
+app = Flask(__name__) # designates this script as the root apth
+sock= Sock(app)
+CORS(app, supports_credentials=True, origins="*")
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == "POST":
+        response = VoiceResponse()
+        # Add initial greeting
+        response.say("Helo, the call is connected go speak now.", voice="woman")
+        # Start recording with transcription enabled
+        connect = Connect()
+        connect.stream(url=f'ws://{request.host}/transcription_callback')
+        response.append(connect)
+        return str(response)
+    else:
+        return "hi this is transcription testing, dont view this with a GET request"
 
-app = FastAPI()
+@sock.route('/transcription_callback')
+def transcription_callback(ws):
+    print(ws)
+    print("hello?")
+    totalbytes = bytes()
+    while True:
+        data = json.loads(ws.receive())
+        type = data['event']
+        if type == "connected":
+            print("connected")  
+        if type == "start":
+            print("start")  
+        if type == "media":
+            print("media")  
+            payloadb64 = data['media']['payload']
+            print(base64.b64decode(payloadb64))
+            totalbytes += base64.b64decode(payloadb64)
+            # decode the mulaw payload
+            
+        if type == "stop":
+            print("stop")  
+            f = open('temp', 'wb')
+            f.write(totalbytes)
+            f.close()
 
-@app.post("/make_call")
-async def make_call(request : Request):
-    data = await request.json()
-    destphone = data.get("to")
-
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    call = client.calls.create(url="", to="a", from_=+18795039086)
-    print(call.sid)
-
-@app.api_route("/outgoing-call", methods=["GET", "POST"])
-async def handle_outgoing_call(request: Request):
-    """Handle outgoing call and return TwiML response to connect to Media Stream."""
-    response = VoiceResponse()
-    response.say("Please wait while we connect your call to the AI voice assistant...")
-    connect = Connect()
-    connect.stream(url=f'wss://{request.url.hostname}/media-stream')
-    response.append(connect)
-    return HTMLResponse(content=str(response), media_type="application/xml")
-
-@app.websocket("/media-stream")
-async def handle_media_stream(websocket: WebSocket):
-    """Handle WebSocket connections between Twilio and OpenAI."""
-    print("Client connected")
-    await websocket.accept()
-
-    async for message in websocket.iter_text():
-        data = json.loads(message)
-        if data['event'] == 'media':
-            audio_append = {
-               "type": "input_audio_buffer.append",
-               "audio": data['media']['payload']
-            }
-            print(audio_append)
-        elif data['event'] == 'start':
-            stream_sid = data['start']['streamSid']
-            print(f"Incoming stream has started {stream_sid}")
-
-@app.get("/")
-async def index():
-    return {"message": "Twilio Media Stream Server is running!"}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__": # if running this file directly
+    app.run(host='0.0.0.0', port=8000, debug=True) # run the app
