@@ -4,9 +4,9 @@ import logging
 from dotenv import load_dotenv
 load_dotenv()
 
-logging.getLogger("databricks.sql").setLevel(print)
+logging.getLogger("databricks.sql").setLevel(logging.DEBUG)
 logging.basicConfig(filename = "results.log",
-                   level    = print)
+                   level    = logging.DEBUG)
 
 connection = sql.connect(
                        server_hostname = "dbc-2fb01cd0-7bda.cloud.databricks.com",
