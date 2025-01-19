@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 export default function Home() {
     const [search, setSearch] = useState("");
+    const [search2, setSearch2] = useState("");
     const [calls, setCalls] = useState([]);
 
     useEffect(() => {
@@ -44,8 +45,19 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold text-center">Phoney Phishing</h1>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <input type="text" placeholder="Enter phone number" className="mb-3 p-2 border rounded" />
-          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" onClick={() => {}}>Call</button>
+          <input 
+            type="text" 
+            placeholder="Enter phone number" 
+            className="mb-3 p-2 border rounded" 
+            value={search2}
+            onChange={(e) => setSearch2(e.target.value)}
+          />
+          <button 
+            className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" 
+            onClick={() => console.log(search2)}
+          >
+            Call
+          </button>
         </div>
         <header className="bg-blue-800 text-white py-4 px-6 rounded mb-4">
           <h1 className="text-2xl font-bold">Recent Calls</h1>

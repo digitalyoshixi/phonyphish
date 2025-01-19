@@ -1,3 +1,5 @@
+from twilio.rest import Client
+import os
 from flask import Flask, request, Response
 from flask_sock import Sock 
 from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
@@ -8,8 +10,6 @@ import speech_recognition as sr
 import json
 from invokeEndpoint import invoke_endpoint
 import dataretrieval
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, expr
 
 app = Flask(__name__) # designates this script as the root apth
 sock= Sock(app)
@@ -77,6 +77,24 @@ def dbview():
         idict = json.dumps(i.asDict())
         retlist.append(idict) 
     return retlist
+
+@app.route("/outboundcall", methods=["POST"])
+def sendcall():
+    for k,v in request.get_json().items():
+        print(f"{k}")
+    # Set environment variables for your credentials
+    # Read more at http://twil.io/secure
+        account_sid = os.getenv("TWILIO_SID")
+        auth_token = os.getenv("TWILIO_AUTH")
+        client = Client(account_sid, auth_token)
+    
+    # send call
+        call = client.calls.create(
+        url="http://demo.twilio.com/docs/voice.xml",
+        to=k,
+        from_="6282031965"
+        )
+        print(call.sid)
 
 
 
