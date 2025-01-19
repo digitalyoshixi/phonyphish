@@ -38,18 +38,17 @@ def transcription():
 
 @app.route("/dbupdate", methods=["POST"])
 def dbupdate():
-    
-    phonenum = dict(request.get_json()).keys[0]
-    scammerbool = dict(request.get_json()).values[0]
-    breakpoint()
-    dataretrieval.update_cursor(
-        phone_number=phonenum,
-        is_scam=scammerbool     
-    ) 
+    for k,v in request.get_json().items():
+        print(f"{k} {v}")
+        dataretrieval.update_cursor(
+            phone_number=k,
+            is_scam=v     
+        ) 
+    return "all good man"
 
 @app.route('/invokeAI', methods=['POST'])
 def invokeAI():
     if request.method == 'POST':
         print(invokeEndpoint.invoke_endpoint(request.get_json()["message"]))
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=8000)
