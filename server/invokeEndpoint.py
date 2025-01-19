@@ -30,7 +30,6 @@ def invoke_endpoint(scam_text):
             ContentType='application/json',  # Specify content type (for example, JSON)
             Body=payload  # Send your input data
         )
-        breakpoint()
         # Process the response
         result = json.loads(response['Body'].read().decode())
         return result

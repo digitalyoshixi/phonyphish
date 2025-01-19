@@ -54,10 +54,4 @@ def delete_cursor(phone_number):
         logging.debug(f"Deleted phone number {phone_number}")
     except Exception as e:
         logging.error(f"Error deleting phone number {phone_number}: {e}")
-  
-
-for row in result:
-  logging.debug(row)
-
-cursor.close()
-connection.close()
+ 

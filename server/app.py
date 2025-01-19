@@ -6,7 +6,7 @@ from flask_cors import CORS, cross_origin
 from datetime import datetime
 import speech_recognition as sr
 import json
-import invokeEndpoint
+from invokeEndpoint import invoke_endpoint
 import dataretrieval
 
 app = Flask(__name__) # designates this script as the root apthim
@@ -36,6 +36,12 @@ def transcription():
     # Optional: Send the transcription via SMS or store it in a database
     return "Transcription received"
 
+@app.route('/invokeAI', methods=['POST'])
+def invokeAI():
+    if request.method == 'POST':
+        print(request.method)
+        print(invoke_endpoint(request.get_json()["message"])[0])
+
 @app.route("/dbupdate", methods=["POST"])
 def dbupdate():
     for k,v in request.get_json().items():
@@ -46,13 +52,25 @@ def dbupdate():
         ) 
     return "all good man"
 
-@app.route("/dbview", methods=["POST"])
+@app.route("/dbinsert", methods=["POST"])
+def dbinsert():
+    for k,v in request.get_json().items():
+        print(f"{k} [v]")
+        is_scam = 1
+        if invoke_endpoint(v) == "benign":
+            is_scam = 0
+        print (invoke_endpoint(v))
+        dataretrieval.insert_cursor(
+            phone_number=k,
+            is_scam=is_scam,
+            transcription=v
+        ) 
+        breakpoint()
+    return "all good man"
+
+@app.route("/dbview", methods=["GET"])
 def dbview():
     return dataretrieval.read_cursor()
 
-@app.route('/invokeAI', methods=['POST'])
-def invokeAI():
-    if request.method == 'POST':
-        print(invokeEndpoint.invoke_endpoint(request.get_json()["message"]))
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8000)
