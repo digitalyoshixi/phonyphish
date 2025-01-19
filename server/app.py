@@ -8,6 +8,8 @@ import speech_recognition as sr
 import json
 from invokeEndpoint import invoke_endpoint
 import dataretrieval
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, expr
 
 app = Flask(__name__) # designates this script as the root apth
 sock= Sock(app)
@@ -69,7 +71,12 @@ def dbinsert():
 
 @app.route("/dbview", methods=["GET"])
 def dbview():
-    return dataretrieval.read_cursor()
+    breakpoint()
+    retlist = []
+    for i in dataretrieval.read_cursor():
+        idict = json.dumps(i.asDict())
+        retlist.append(idict) 
+    return retlist
 
 
 

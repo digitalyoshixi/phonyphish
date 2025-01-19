@@ -16,7 +16,7 @@ export default function Home() {
 
         fetchCalls();
     }, []);
-
+    console.log(calls);
     const filteredCalls = calls.filter((call) => call.number.includes(search));
   
     const handleReport = async (number) => {
