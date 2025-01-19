@@ -14,5 +14,4 @@ client = Client(account_sid, auth_token)
 transcriptions = client.transcriptions.list(limit=1)
 if transcriptions:
     latest_transcription = transcriptions[0]
-    breakpoint()
     print(latest_transcription.transcription_text)
