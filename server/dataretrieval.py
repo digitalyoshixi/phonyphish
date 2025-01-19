@@ -14,10 +14,10 @@ connection = sql.connect(
                        access_token = os.getenv("POSTDATABRICKS"))
 cursor = connection.cursor()
 
-def update_cursor(phone_number, is_scam):
+def insert_cursor(phone_number, is_scam, transcription):
     try:
         cursor.execute(
-            f"UPDATE phone_scam_list SET is_scam = {is_scam}, phone_number = {phone_number}",
+            f"INSERT INTO phone_scam_list (is_scam, phone_number, transcription) VALUES ({is_scam},{phone_number}, {transcription})",
         )
         connection.commit()
         logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")

@@ -31,6 +31,7 @@ def index():
 def transcription():
     transcription_text = request.form.get("TranscriptionText")
     print(f"Transcription: {transcription_text}")
+    breakpoint()
     
     # Optional: Send the transcription via SMS or store it in a database
     return "Transcription received"
