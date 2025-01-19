@@ -25,7 +25,7 @@ export default function Home() {
         alert(`The call with number ${number} has been successfully reported.`);
       }
       catch (error) {
-        alert('Failed to report the call. Please try again later.');
+        alert(error.message);
       }
 
     };
