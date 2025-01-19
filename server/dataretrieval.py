@@ -24,7 +24,7 @@ result = cursor.fetchall()
 def update_cursor(phone_number, is_scam):
     try:
         cursor.execute(
-            "UPDATE your_table_name SET is_scam = ? WHERE phone_number = ?",
+            "UPDATE phone_scam_list SET is_scam = ? WHERE phone_number = ?",
             (is_scam, phone_number)
         )
         connection.commit()
@@ -32,12 +32,9 @@ def update_cursor(phone_number, is_scam):
     except Exception as e:
         logging.error(f"Error updating phone number {phone_number}: {e}")
 
-update_cursor("1234567890", True)
-breakpoint()
-
 def read_cursor():
     try:
-        cursor.execute("SELECT * FROM your_table_name")
+        cursor.execute("SELECT * FROM phone_scam_list")
         result = cursor.fetchall()
         logging.debug(f"Read {len(result)} rows")
         return result
