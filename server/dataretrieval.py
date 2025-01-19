@@ -44,8 +44,6 @@ def read_cursor():
         logging.error(f"Error reading table: {e}")
         return []
 
-breakpoint()
-    
 def delete_cursor(phone_number):
     try:
         cursor.execute(
