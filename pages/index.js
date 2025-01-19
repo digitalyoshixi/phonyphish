@@ -1,10 +1,21 @@
 import { useState, useEffect } from "react";
 export default function Home() {
     const [search, setSearch] = useState("");
-    const calls = [
-      { number: "000-000-0000", location: "Toronto, Canada", date: "2025-01-18", time: "10:30 AM", status: "Scam" },
-      { number: "416-000-0000", location: "New York, United States", date: "2025-01-17", time: "03:00 PM", status: "Safe" },
-    ];
+    const [calls, setCalls] = useState([]);
+
+    useEffect(() => {
+        const fetchCalls = async () => {
+            const response = await fetch('http://ec2-184-73-58-196.compute-1.amazonaws.com:8000/dbview');
+            if (response.ok) {
+                const data = await response.json();
+                setCalls(data);
+            } else {
+                console.error('Failed to fetch calls');
+            }
+        };
+
+        fetchCalls();
+    }, []);
 
     const filteredCalls = calls.filter((call) => call.number.includes(search));
   
@@ -34,7 +45,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center justify-center">
           <input type="text" placeholder="Enter phone number" className="mb-3 p-2 border rounded" />
-          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" onClick={() => handleReport(document.querySelector('input').value)}>Call</button>
+          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" onClick={() => {}}>Call</button>
         </div>
         <header className="bg-blue-800 text-white py-4 px-6 rounded mb-4">
           <h1 className="text-2xl font-bold">Recent Calls</h1>
