@@ -17,11 +17,42 @@ connection = sql.connect(
 
 cursor = connection.cursor()
 
-
-a = cursor.execute("SELECT * from range(10)")
-breakpoint()
-
+cursor.execute("SELECT * from range(10)")
 result = cursor.fetchall()
+
+
+def update_cursor(phone_number, is_scam):
+    try:
+        cursor.execute(
+            "UPDATE your_table_name SET is_scam = ? WHERE phone_number = ?",
+            (is_scam, phone_number)
+        )
+        connection.commit()
+        logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")
+    except Exception as e:
+        logging.error(f"Error updating phone number {phone_number}: {e}")
+
+def read_cursor():
+    try:
+        cursor.execute("SELECT * FROM your_table_name")
+        result = cursor.fetchall()
+        logging.debug(f"Read {len(result)} rows")
+        return result
+    except Exception as e:
+        logging.error(f"Error reading table: {e}")
+        return []
+    
+def delete_cursor(phone_number):
+    try:
+        cursor.execute(
+            "DELETE FROM your_table_name WHERE phone_number = ?",
+            (phone_number,)
+        )
+        connection.commit()
+        logging.debug(f"Deleted phone number {phone_number}")
+    except Exception as e:
+        logging.error(f"Error deleting phone number {phone_number}: {e}")
+  
 
 for row in result:
   logging.debug(row)
