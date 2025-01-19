@@ -33,6 +33,6 @@ def invoke_endpoint(scam_text):
         )
         # Process the response
         result = json.loads(response['Body'].read().decode())
-        print(result)
+        return result
     except boto3.exceptions.Boto3Error as e:
         print(f"An error occurred: {e}")
