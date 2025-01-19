@@ -23,7 +23,6 @@ endpoint_name = 'huggingface-pytorch-inference-2025-01-18-21-54-37-838'
 def invoke_endpoint(scam_text):
     # Prepare the payload for the request (replace with your actual data)
     payload = json.dumps({"inputs": f'{scam_text}'})
-
     try:
         # Call the SageMaker endpoint
         response = sagemaker_runtime.invoke_endpoint(
@@ -31,6 +30,7 @@ def invoke_endpoint(scam_text):
             ContentType='application/json',  # Specify content type (for example, JSON)
             Body=payload  # Send your input data
         )
+        breakpoint()
         # Process the response
         result = json.loads(response['Body'].read().decode())
         return result

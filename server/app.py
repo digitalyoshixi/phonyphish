@@ -9,6 +9,7 @@ import speech_recognition as sr
 import audioop
 import json
 from vosk import Model, KaldiRecognizer
+import invokeEndpoint
 
 app = Flask(__name__) # designates this script as the root apth
 sock= Sock(app)
@@ -37,3 +38,9 @@ def transcription():
     # Optional: Send the transcription via SMS or store it in a database
     return "Transcription received"
 
+@app.route('/invokeAI', methods=['POST'])
+def invokeAI():
+    if request.method == 'POST':
+        print(invokeEndpoint.invoke_endpoint(request.get_json()["message"]))
+if __name__ == "__main__":
+    app.run(port=8000)
