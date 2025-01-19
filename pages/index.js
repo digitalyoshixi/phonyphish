@@ -1,20 +1,10 @@
 import { useState, useEffect } from "react";
 export default function Home() {
     const [search, setSearch] = useState("");
-    const [calls, setCalls] = useState([]); // Initialize calls as an empty array
-
-    useEffect(() => {
-        const fetchCalls = async () => {
-            const response = await fetch('http://ec2-184-73-58-196.compute-1.amazonaws.com:8000/dbview');
-            if (!response.ok) {
-                throw new Error('Failed to fetch calls');
-            }
-            const data = await response.json();
-            setCalls(data); // Set calls to the fetched data
-        };
-
-        fetchCalls().catch(console.error);
-    }, []); //
+    const calls = [
+      { number: "000-000-0000", location: "Toronto, Canada", date: "2025-01-18", time: "10:30 AM", status: "Scam" },
+      { number: "416-000-0000", location: "New York, United States", date: "2025-01-17", time: "03:00 PM", status: "Safe" },
+    ];
 
     const filteredCalls = calls.filter((call) => call.number.includes(search));
   
