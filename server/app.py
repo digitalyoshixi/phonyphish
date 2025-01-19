@@ -11,8 +11,7 @@ import dataretrieval
 
 app = Flask(__name__) # designates this script as the root apthim
 sock= Sock(app)
-CORS(app, supports_credentials=True, origins="*")
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, resources={r"/*" : {"origins" : "http://ec2-184-73-58-196.compute-1.amazonaws.com:8000"}})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

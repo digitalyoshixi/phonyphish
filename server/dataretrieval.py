@@ -8,30 +8,21 @@ logging.getLogger("databricks.sql").setLevel(logging.DEBUG)
 logging.basicConfig(filename = "results.log",
                    level    = logging.DEBUG)
 
-
 connection = sql.connect(
                        server_hostname = "dbc-2fb01cd0-7bda.cloud.databricks.com",
                        http_path = "/sql/1.0/warehouses/fea7e42c01f5782d",
                        access_token = os.getenv("POSTDATABRICKS"))
-
-
 cursor = connection.cursor()
-
-def read_cursor():
-    return cursor.execute("SELECT * from phone_scam_list").fetchall()
 
 def update_cursor(phone_number, is_scam):
     try:
         cursor.execute(
-            "UPDATE phone_scam_list SET is_scam = ? WHERE phone_number = ?",
-            (is_scam, phone_number)
+            f"UPDATE phone_scam_list SET is_scam = {is_scam}, phone_number = {phone_number}",
         )
         connection.commit()
         logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")
     except Exception as e:
         logging.error(f"Error updating phone number {phone_number}: {e}")
-
-breakpoint()
 
 def read_cursor():
     try:
@@ -42,6 +33,8 @@ def read_cursor():
     except Exception as e:
         logging.error(f"Error reading table: {e}")
         return []
+
+breakpoint()
     
 def delete_cursor(phone_number):
     try:
