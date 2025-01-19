@@ -17,9 +17,8 @@ connection = sql.connect(
 
 cursor = connection.cursor()
 
-cursor.execute("SELECT * from range(10)")
-result = cursor.fetchall()
-
+def read_cursor():
+    return cursor.execute("SELECT * from phone_scam_list").fetchall()
 
 def update_cursor(phone_number, is_scam):
     try:
@@ -31,6 +30,8 @@ def update_cursor(phone_number, is_scam):
         logging.debug(f"Updated phone number {phone_number} with is_scam = {is_scam}")
     except Exception as e:
         logging.error(f"Error updating phone number {phone_number}: {e}")
+
+breakpoint()
 
 def read_cursor():
     try:
