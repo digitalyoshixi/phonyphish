@@ -28,6 +28,13 @@ export default function Home() {
   
     return (
       <div className="p-4">
+          <img style={{position: 'absolute', top: 0, left: 0}} width="60" className="m-4 rounded-lg" src="/cover1.png"></img>          
+        <div className="flex flex-row justify-center">
+          <h1 className="text-5xl font-extrabold text-center">Phoney Phishing</h1>
+        </div>
+        <div className="flex justify-center">
+          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500">Call</button>
+        </div>
         <header className="bg-blue-800 text-white py-4 px-6 rounded mb-4">
           <h1 className="text-2xl font-bold">Recent Calls</h1>
           <p className="text-sm">Search for a Recent Call</p>
