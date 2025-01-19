@@ -3,15 +3,13 @@ from flask_sock import Sock
 from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
 from flask_cors import CORS, cross_origin
 #from flask_sockets import Sockets
-import json 
 from datetime import datetime
 import speech_recognition as sr
-import audioop
 import json
-from vosk import Model, KaldiRecognizer
 import invokeEndpoint
+import dataretrieval
 
-app = Flask(__name__) # designates this script as the root apth
+app = Flask(__name__) # designates this script as the root apthim
 sock= Sock(app)
 CORS(app, supports_credentials=True, origins="*")
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -38,9 +36,20 @@ def transcription():
     # Optional: Send the transcription via SMS or store it in a database
     return "Transcription received"
 
+@app.route("/dbupdate", methods=["POST"])
+def dbupdate():
+    
+    phonenum = dict(request.get_json()).keys[0]
+    scammerbool = dict(request.get_json()).values[0]
+    breakpoint()
+    dataretrieval.update_cursor(
+        phone_number=phonenum,
+        is_scam=scammerbool     
+    ) 
+
 @app.route('/invokeAI', methods=['POST'])
 def invokeAI():
     if request.method == 'POST':
         print(invokeEndpoint.invoke_endpoint(request.get_json()["message"]))
 if __name__ == "__main__":
-    app.run(port=8000)
+    app.run(host="0.0.0.0", port=8000)
