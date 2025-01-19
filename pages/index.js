@@ -32,8 +32,9 @@ export default function Home() {
         <div className="flex flex-row justify-center">
           <h1 className="text-5xl font-extrabold text-center">Phoney Phishing</h1>
         </div>
-        <div className="flex justify-center">
-          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500">Call</button>
+        <div className="flex flex-col items-center justify-center">
+          <input type="text" placeholder="Enter phone number" className="mb-3 p-2 border rounded" />
+          <button className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" onClick={() => handleReport(document.querySelector('input').value)}>Call</button>
         </div>
         <header className="bg-blue-800 text-white py-4 px-6 rounded mb-4">
           <h1 className="text-2xl font-bold">Recent Calls</h1>
