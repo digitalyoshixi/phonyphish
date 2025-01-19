@@ -10,7 +10,6 @@ export default function Home() {
   
     const handleReport = async (number) => {
 
-      try {
         const response = await fetch('ec2-184-73-58-196.compute-1.amazonaws.com:8000/dbupdate', {
           method: 'POST',
           headers: {
@@ -23,10 +22,7 @@ export default function Home() {
           throw new Error('Something went wrong!');
         }
         alert(`The call with number ${number} has been successfully reported.`);
-      }
-      catch (error) {
-        alert(error.message);
-      }
+      
 
     };
   
