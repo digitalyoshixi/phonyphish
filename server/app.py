@@ -81,7 +81,7 @@ def dbview():
 @app.route("/outboundcall", methods=["POST"])
 def sendcall():
     for k,v in request.get_json().items():
-        print(f"{k}")
+        print(f"{k}, {v}")
     # Set environment variables for your credentials
     # Read more at http://twil.io/secure
         account_sid = os.getenv("TWILIO_SID")
@@ -91,7 +91,7 @@ def sendcall():
     # send call
         call = client.calls.create(
         url="http://demo.twilio.com/docs/voice.xml",
-        to=k,
+        to=v,
         from_="6282031965"
         )
         print(call.sid)

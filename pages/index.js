@@ -54,7 +54,23 @@ export default function Home() {
           />
           <button 
             className="p-3 m-5 rounded-md font-bold text-5xl text-white bg-red-500" 
-            onClick={() => console.log(search2)}
+            onClick={async () => {
+                try {
+                    const response = await fetch('127.0.0.1:8000/outboundcall', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ number: search2 }),
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to send call');
+                    }
+                    console.log('Call sent successfully');
+                } catch (error) {
+                    console.error('Error sending call:', error);
+                }
+            }}
           >
             Call
           </button>
