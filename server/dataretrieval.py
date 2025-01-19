@@ -32,6 +32,9 @@ def update_cursor(phone_number, is_scam):
     except Exception as e:
         logging.error(f"Error updating phone number {phone_number}: {e}")
 
+update_cursor("1234567890", True)
+breakpoint()
+
 def read_cursor():
     try:
         cursor.execute("SELECT * FROM your_table_name")
