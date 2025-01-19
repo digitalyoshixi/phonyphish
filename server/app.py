@@ -65,7 +65,6 @@ def dbinsert():
             is_scam=is_scam,
             transcription=v
         ) 
-        breakpoint()
     return "all good man"
 
 @app.route("/dbview", methods=["GET"])
