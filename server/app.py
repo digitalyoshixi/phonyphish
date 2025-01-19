@@ -9,9 +9,10 @@ import json
 from invokeEndpoint import invoke_endpoint
 import dataretrieval
 
-app = Flask(__name__) # designates this script as the root apthim
+app = Flask(__name__) # designates this script as the root apth
 sock= Sock(app)
-CORS(app, resources={r"/*" : {"origins" : "http://ec2-184-73-58-196.compute-1.amazonaws.com:8000"}})
+#CORS(app, resources={r"/*" : {"origins" : "http://ec2-184-73-58-196.compute-1.amazonaws.com:8000"}})
+CORS(app, resources={r"/*" : {"origins" : "*"}})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -70,5 +71,7 @@ def dbinsert():
 def dbview():
     return dataretrieval.read_cursor()
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+
+
+if __name__ == "__main__": # if running this file directly
+    app.run(host='0.0.0.0', port=8000) # run the app
