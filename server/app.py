@@ -5,8 +5,6 @@ from flask_cors import CORS, cross_origin
 #from flask_sockets import Sockets
 import json 
 from datetime import datetime
-import base64
-import audioop
 import speech_recognition as sr
 import audioop
 import json
@@ -22,39 +20,20 @@ def index():
     if request.method == "POST":
         response = VoiceResponse()
         # Add initial greeting
-        response.say("Helo, the call is connected go speak now.", voice="woman")
+        response.say("Helo, the call is connected you can speak now.", voice="woman")
         # Start recording with transcription enabled
-        connect = Connect()
-        connect.stream(url=f'ws://{request.host}/transcription_callback')
-        response.append(connect)
+        response.record(transcribe=True, transcribe_callback="/transcription")
+
+        response.hangup()
         return str(response)
     else:
         return "hi this is transcription testing, dont view this with a GET request"
 
-@sock.route('/transcription_callback')
-def transcription_callback(ws):
-    print(ws)
-    print("hello?")
-    totalbytes = bytes()
-    while True:
-        data = json.loads(ws.receive())
-        type = data['event']
-        if type == "connected":
-            print("connected")  
-        if type == "start":
-            print("start")  
-        if type == "media":
-            print("media")  
-            payloadb64 = data['media']['payload']
-            print(base64.b64decode(payloadb64))
-            totalbytes += base64.b64decode(payloadb64)
-            # decode the mulaw payload
-            
-        if type == "stop":
-            print("stop")  
-            f = open('temp', 'wb')
-            f.write(totalbytes)
-            f.close()
+@app.route("/transcription", methods=["POST"])
+def transcription():
+    transcription_text = request.form.get("TranscriptionText")
+    print(f"Transcription: {transcription_text}")
+    
+    # Optional: Send the transcription via SMS or store it in a database
+    return "Transcription received"
 
-if __name__ == "__main__": # if running this file directly
-    app.run(host='0.0.0.0', port=8000, debug=True) # run the app
