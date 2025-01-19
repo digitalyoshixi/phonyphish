@@ -1,7 +1,8 @@
 from databricks import sql
 import os
 import logging
-
+from dotenv import load_dotenv
+load_dotenv()
 
 logging.getLogger("databricks.sql").setLevel(logging.DEBUG)
 logging.basicConfig(filename = "results.log",
@@ -17,15 +18,13 @@ connection = sql.connect(
 cursor = connection.cursor()
 
 
-cursor.execute("SELECT * from range(10)")
-
+a = cursor.execute("SELECT * from range(10)")
+breakpoint()
 
 result = cursor.fetchall()
 
-
 for row in result:
   logging.debug(row)
-
 
 cursor.close()
 connection.close()
